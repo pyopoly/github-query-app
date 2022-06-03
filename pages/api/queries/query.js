@@ -49,18 +49,9 @@ export const githubQueries = ({ query, type, cursor, limit=10 }) => {
 }
 
 
-export const fetchGithub = async ({ query, type, cursor, limit=10 }) => {
-  // const domain = "https://github-query-8n2rvc1gw-pyopoly.vercel.app"
-  const domain = ""
-  const url = `api/search-github?q=${query}&type=${type}&limit=${limit}${cursor? `&cursor=${cursor}`: ""}`;
-  const response = await fetch(url
-  //   , {
-  //     method: 'GET',
-  //     headers: {
-  //         'Content-Type': 'application/json',
-  //     }
-  // }
-  )
+export const fetchGithub = async ({ query, type, cursor, limit=10, domain="" }) => {
+  const url = `${domain}api/search-github?q=${query}&type=${type}&limit=${limit}${cursor? `&cursor=${cursor}`: ""}`;
+  const response = await fetch(url)
       .then(res => {
         if (res.status !== 200) throw Error(res.statusText);
         return res.json()

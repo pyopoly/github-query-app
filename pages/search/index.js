@@ -55,7 +55,8 @@ export default function Search({ data, status }) {
 export async function getServerSideProps({ query }) {
     if (!query.q || !query.type) return { props: { status: "no params" } };
 
-    const response = await fetchGithub({ query: query.q, type:query.type });
+    const domain = "http://localhost:3000/"
+    const response = await fetchGithub({ query: query.q, type:query.type, domain:domain });
 
     return { props: response.result };
 }

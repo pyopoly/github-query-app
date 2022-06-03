@@ -10,7 +10,6 @@ const ListView = ({ results, query, type, endCursor, setResults }) => {
 
   const handleClick = async () => {
     const { result} = await fetchGithub({query: query, type: type, cursor: endCursor.current});
-    console.log(result)
     endCursor.current = result.data.search.pageInfo.endCursor;
     const nodes = result.data.search.nodes;
     setResults([ ...results, ...nodes ])
