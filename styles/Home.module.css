@@ -12,6 +12,10 @@
   align-items: center;
 }
 
+.main_page {
+  justify-content: center;
+}
+
 .footer {
   display: flex;
   flex: 1;
@@ -37,12 +41,18 @@
 .title a:focus,
 .title a:active {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .title {
   margin: 0;
   line-height: 1.15;
   font-size: 4rem;
+}
+
+h2.title {
+  margin: 2rem;
+  font-size: 3rem;
 }
 
 .title,
@@ -82,7 +92,7 @@
   border: 1px solid #eaeaea;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
-  max-width: 300px;
+  /* max-width: 300px; */
 }
 
 .card:hover,
