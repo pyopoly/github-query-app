@@ -3,24 +3,22 @@ import Header from '../../components/Header/Header'
 import ListView from '../../components/ListView/ListView'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import { useRouter } from "next/router"
-import { useEffect, useState } from 'react'
-import { queryGithub } from '../api/queries/query'
+import { useEffect, useState, useRef } from 'react'
+import { fetchGithub, TYPES } from '../api/queries/query'
 import Image from 'next/image'
-
-
-const TYPES = ["REPOSITORY", "USER"]
 
 
 export default function Search({ data, status }) {
     const router = useRouter();
     const { q: query, type } = router.query;
     const [queryResults, setQueryResults] = useState(data?.search?.nodes)
+    const endCursor = useRef(data?.search?.pageInfo.endCursor);
 
     const submit = (query, type) => {
         router.push(`/search?q=${query}&type=${type}`)
     }
 
-    
+
     useEffect(() => {
         if (status === "ok" && query && TYPES.includes(type)) {
             setQueryResults([...data?.search?.nodes])
@@ -40,7 +38,11 @@ export default function Search({ data, status }) {
                 </h2>
                 <SearchBar placeholder="Search" onSubmit={submit} initValue={query} initType={type} />
                 <div className={styles.grid}>
-                    {queryResults && <ListView results={queryResults} type={type} />}
+                    {queryResults && <ListView 
+                    results={queryResults} 
+                    type={type} 
+                    endCursor={endCursor}
+                    setResults={setQueryResults} />}
                 </div>
             </main>
         </div>
@@ -52,27 +54,7 @@ export default function Search({ data, status }) {
 export async function getServerSideProps({ query }) {
     if (!query.q || !query.type) return { props: { status: "no params" } };
 
-    const token = process.env.SECRET_KEY;
-    const graphQLquery = queryGithub({
-        query: query.q,
-        type: query.type
-    });
+    const response = await fetchGithub({ query: query.q, type:query.type });
 
-
-    const response = await fetch(`https://api.github.com/graphql`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `token ${token}`
-        },
-        body: JSON.stringify(graphQLquery)
-    })
-        .then(res => res.json())
-        .then(data => {
-            if (!!data.errors) throw Error(data.errors[0].message);
-            return { ...data, status: "ok" };
-        })
-        .catch(error => ({ status: error.message }));
-
-    return { props: response };
+    return { props: response.result };
 }
