@@ -2,9 +2,10 @@ import styles from '../../styles/Home.module.css'
 import Header from '../../components/Header/Header'
 import ListView from '../../components/ListView/ListView'
 import SearchBar from '../../components/SearchBar/SearchBar'
-import { useRouter } from "next/router";
+import { useRouter } from "next/router"
 import { useEffect, useState } from 'react'
-import { queryGithub } from '../api/queries/query';
+import { queryGithub } from '../api/queries/query'
+import Image from 'next/image'
 
 
 const TYPES = ["REPOSITORY", "USER"]
@@ -15,6 +16,11 @@ export default function Search({ data, status }) {
     const { q: query, type } = router.query;
     const [queryResults, setQueryResults] = useState(data?.search?.nodes)
 
+    const submit = (query, type) => {
+        router.push(`/search?q=${query}&type=${type}`)
+    }
+
+    
     useEffect(() => {
         if (status === "ok" && query && TYPES.includes(type)) {
             setQueryResults([...data?.search?.nodes])
@@ -22,16 +28,15 @@ export default function Search({ data, status }) {
     }, [query, type, data?.search?.nodes, status])
 
 
-    const submit = (query, type) => {
-        router.push(`/search?q=${query}&type=${type}`)
-    }
-
     return (
         <div className={styles.container}>
             <Header title="GitHub Query App" description="Query the GitHub GraphQL for Repos or Users" favicon="/favicon.ico" />
             <main className={styles.main}>
                 <h2 className={styles.title}>
                     Welcome to Github Query App
+                <a className={styles.logo} href="https://github.com/pyopoly/github-query-app" target="_blank" rel="noreferrer">
+                    <Image src="/github.svg" alt="GitHub Logo" width={35} height={35} />
+                </a>
                 </h2>
                 <SearchBar placeholder="Search" onSubmit={submit} initValue={query} initType={type} />
                 <div className={styles.grid}>
