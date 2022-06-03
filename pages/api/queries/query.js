@@ -50,7 +50,8 @@ export const githubQueries = ({ query, type, cursor, limit=10 }) => {
 
 
 export const fetchGithub = async ({ query, type, cursor, limit=10 }) => {
-  const url = `http://localhost:3000/api/search-github?q=${query}&type=${type}&limit=${limit}${cursor? `&cursor=${cursor}`: ""}`;
+  const domain = "https://github-query-8n2rvc1gw-pyopoly.vercel.app"
+  const url = `${domain}/api/search-github?q=${query}&type=${type}&limit=${limit}${cursor? `&cursor=${cursor}`: ""}`;
   const response = await fetch(url, {
       method: 'GET',
       headers: {
