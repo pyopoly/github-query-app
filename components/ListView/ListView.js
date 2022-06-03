@@ -1,8 +1,12 @@
 import mainStyles from '../../styles/Home.module.css';
-
-const ListView = () => {
+import RepoList from './Lists/RepoList';
+import UserList from './Lists/UserList';
+const ListView = ({ results, type }) => {
   return (
-    <div className={mainStyles.card}>ListView</div>
+    <div className={mainStyles.container}>
+      {(type === "REPOSITORY") && <RepoList results={results} />}
+      {(type === "USER") && <UserList results={results} />}
+    </div>
   )
 }
 
