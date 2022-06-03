@@ -1,4 +1,5 @@
 import styles from '../../styles/Home.module.css';
+import listStyles from '../../styles/ListView.module.css'
 import RepoList from './Lists/RepoList';
 import UserList from './Lists/UserList';
 
@@ -18,7 +19,7 @@ const ListView = ({ results, type, endCursor, setResults }) => {
     <div className={styles.container}>
       {(type === "REPOSITORY") && <RepoList results={results} />}
       {(type === "USER") && <UserList results={results} />}
-      <button onClick={handleClick}>more</button>
+      <button className={listStyles.button} onClick={handleClick}>more</button>
     </div>
   )
 }

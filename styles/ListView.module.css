@@ -22,3 +22,23 @@ h2.profile_title {
 .description {
   margin: 1rem;
 }
+
+.button {
+  display: block;
+  margin: auto;
+  font-size: 1rem;
+  border-radius: 8px;
+  background-color: white;
+  color: black;
+  border: 1px solid rgb(146, 215, 247);
+  padding: 0.5rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+.button:hover {
+  border-color: #4c6faf  ;
+}
+
