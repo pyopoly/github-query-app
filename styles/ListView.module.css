@@ -1,8 +1,12 @@
-.profile_img {
-  border-radius: 50%;
+.profile_img_container {
   width: 5rem;
   height: 5rem;
   margin: 0 1rem 0 0;
+  position: relative;
+}
+
+.profile_img {
+  border-radius: 50%;
 }
 
 h2.profile_title {

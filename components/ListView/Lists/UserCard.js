@@ -5,11 +5,13 @@ import Image from 'next/image'
 const UserCard = ({ result }) => {
     return (
         <div className={`${styles.card} ${listStyles.profile_card}`}>
-            <img className={listStyles.profile_img} src={result.avatarUrl} />
+            <div className={listStyles.profile_img_container}>
+                <Image className={listStyles.profile_img} src={result.avatarUrl} layout="fill" />
+            </div>
             <div>
                 <span className={listStyles.profile_header}>
                     <h2 className={listStyles.profile_title}>{result.login}</h2>
-                    <a href={result.url} target="_blank">
+                    <a href={result.url} target="_blank" rel="noreferrer">
                         <Image src="/github.svg" alt="GitHub Logo" width={28} height={28} />
                     </a>
                 </span>

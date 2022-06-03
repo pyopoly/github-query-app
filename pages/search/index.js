@@ -16,10 +16,10 @@ export default function Search({ data, status }) {
     const [queryResults, setQueryResults] = useState(data?.search?.nodes)
 
     useEffect(() => {
-        if (status === "ok" && router.query.q && TYPES.includes(router.query.type)) {
+        if (status === "ok" && query && TYPES.includes(type)) {
             setQueryResults([...data?.search?.nodes])
         }
-    }, [query, type])
+    }, [query, type, data?.search?.nodes, status])
 
 
     const submit = (query, type) => {

@@ -7,7 +7,7 @@ const RepoCard = ({ result }) => {
         <div className={styles.card}>
             <span className={listStyles.profile_header}>
                 <h2 className={listStyles.profile_title}>{result.name}</h2>
-                <a href={`https://github.com/${result.nameWithOwner}`} target="_blank">
+                <a href={`https://github.com/${result.nameWithOwner}`} target="_blank" rel="noreferrer">
                     <Image src="/github.svg" alt="GitHub Logo" width={28} height={28} />
                 </a>
             </span>
