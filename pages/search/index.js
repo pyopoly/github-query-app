@@ -4,7 +4,7 @@ import ListView from '../../components/ListView/ListView'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import { useRouter } from "next/router"
 import { useEffect, useState, useRef } from 'react'
-import { fetchGithub, TYPES } from '../api/queries/query'
+import { githubQueries, TYPES } from '../api/queries/query'
 import Image from 'next/image'
 
 
@@ -55,8 +55,30 @@ export default function Search({ data, status,u }) {
 export async function getServerSideProps({ query }) {
     if (!query.q || !query.type) return { props: { status: "no params" } };
     
-    const baseURL = "http://localhost:3000/"
-    const response = await fetchGithub({ query: query.q, type:query.type, domain:`${process.env.VERCEL_URL}/` });
+    // const baseURL = "http://localhost:3000/"
+    // const response = await fetchGithub({ query: query.q, type:query.type, domain:`${process.env.VERCEL_URL}/` });
 
-    return { props: response.result };
+    const token = process.env.SECRET_KEY;
+    const graphQLquery = githubQueries({
+        query: query.q,
+        type: query.type
+    });
+
+
+    const response = await fetch(`https://api.github.com/graphql`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `token ${token}`
+        },
+        body: JSON.stringify(graphQLquery)
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (!!data.errors) throw Error(data.errors[0].message);
+            return { ...data, status: "ok" };
+        })
+        .catch(error => ({ status: error.message }));
+
+    return { props: response };
 }
