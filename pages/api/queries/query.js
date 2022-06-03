@@ -54,6 +54,7 @@ export const fetchGithub = async ({ query, type, cursor, limit=10 }) => {
   const url = `${domain}/api/search-github?q=${query}&type=${type}&limit=${limit}${cursor? `&cursor=${cursor}`: ""}`;
   const response = await fetch(url, {
       method: 'GET',
+      mode: 'no-cors',
       headers: {
           'Content-Type': 'application/json',
       }

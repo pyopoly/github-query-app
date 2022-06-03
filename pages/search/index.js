@@ -39,7 +39,8 @@ export default function Search({ data, status }) {
                 <SearchBar placeholder="Search" onSubmit={submit} initValue={query} initType={type} />
                 <div className={styles.grid}>
                     {queryResults && <ListView 
-                    results={queryResults} 
+                    results={queryResults}
+                    query={query}
                     type={type} 
                     endCursor={endCursor}
                     setResults={setQueryResults} />}

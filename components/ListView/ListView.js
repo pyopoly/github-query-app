@@ -6,10 +6,10 @@ import UserList from './Lists/UserList';
 import { fetchGithub } from '../../pages/api/queries/query.js'
 
 
-const ListView = ({ results, type, endCursor, setResults }) => {
+const ListView = ({ results, query, type, endCursor, setResults }) => {
 
   const handleClick = async () => {
-    const { result: {data} } = await fetchGithub({query: "x", type:type, cursor: endCursor.current});
+    const { result: {data} } = await fetchGithub({query: query, type: type, cursor: endCursor.current});
     endCursor.current = data.search.pageInfo.endCursor;
     const nodes = data.search.nodes;
     setResults([ ...results, ...nodes ])
