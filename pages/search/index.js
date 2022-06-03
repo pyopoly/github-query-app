@@ -14,8 +14,6 @@ export default function Search({ data, status,u }) {
     const [queryResults, setQueryResults] = useState(data?.search?.nodes)
     const endCursor = useRef(data?.search?.pageInfo.endCursor);
 
-    console.log(u)
-
     const submit = (query, type) => {
         router.push(`/search?q=${query}&type=${type}`)
     }
@@ -58,7 +56,7 @@ export async function getServerSideProps({ query }) {
     if (!query.q || !query.type) return { props: { status: "no params" } };
     
     const baseURL = "http://localhost:3000/"
-    const response = await fetchGithub({ query: query.q, type:query.type, domain:process.env.VERCEL_URL });
+    const response = await fetchGithub({ query: query.q, type:query.type, domain:`${process.env.VERCEL_URL}/` });
 
-    return { props: {...response.result, u: process.env.VERCEL_URL} };
+    return { props: response.result };
 }
