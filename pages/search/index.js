@@ -26,7 +26,7 @@ export default function Search({ q, type, cursor, limit = 10 }) {
             }
         })
         if (element) observer.current.observe(element)
-    }, [isLoading, hasMore])
+    }, [isLoading, hasMore, loadMoreTrigger])
 
 
     const submit = (q, type) => {

@@ -7,7 +7,7 @@ const UserCard = ({ result }, ref) => {
     return (
         <div className={`${styles.card} ${listStyles.profile_card}`}>
             <div className={listStyles.profile_img_container}>
-                {result.avatarUrl && <Image className={listStyles.profile_img} src={result.avatarUrl} layout="fill" />}
+                {result.avatarUrl && <Image className={listStyles.profile_img} src={result.avatarUrl} alt="User Profile" layout="fill" />}
             </div>
             <div>
                 <span className={listStyles.profile_header}>
