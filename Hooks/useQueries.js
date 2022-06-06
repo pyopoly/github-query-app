@@ -20,18 +20,23 @@ const useQueries = (q, type, limit, cursorRef, loadMoreTrigger) => {
         setIsError(false);
 
         const url = `api/search-github?q=${q}&type=${type}&limit=${limit}${cursorRef.current ? `&cursor=${cursorRef.current}` : ""}`;
+        let cancel;
 
-        axios.get(url).then(res => {
+        axios.get(url,{
+            cancelToken: new axios.CancelToken(c => cancel = c)
+        }).then(res => {
             const { nodes, pageInfo: { endCursor, hasNextPage } } = res.data;
-            setQueries(prevQueries => [ ...prevQueries, ...nodes ]);
+            setQueries(prevQueries => [ ...prevQueries, ...nodes.filter(element=> element.id) ]);
             setHasMore(hasNextPage);
             setIsLoading(false);
             cursorRef.current = endCursor;
         }).catch(e => {
+            if (axios.isCancel(e)) return;
             setIsError(true);
             console.log("error", e);
         })
 
+        return () => cancel();
     }, [q, type, loadMoreTrigger])
 
     return { queries, isLoading, isError, hasMore }

@@ -1,12 +1,13 @@
 import styles from '../../../styles/Home.module.css'
 import listStyles from '../../../styles/ListView.module.css'
 import Image from 'next/image'
+import { forwardRef } from 'react'
 
-const UserCard = ({ result }) => {
+const UserCard = forwardRef(({ result }, ref) => {
     return (
         <div className={`${styles.card} ${listStyles.profile_card}`}>
             <div className={listStyles.profile_img_container}>
-                <Image className={listStyles.profile_img} src={result.avatarUrl} layout="fill" />
+                {result.avatarUrl && <Image className={listStyles.profile_img} src={result.avatarUrl} layout="fill" />}
             </div>
             <div>
                 <span className={listStyles.profile_header}>
@@ -17,8 +18,9 @@ const UserCard = ({ result }) => {
                 </span>
                 <div className={listStyles.description}>{result.bio}</div>
             </div>
+            <div className='loadMore' ref={ref}></div>
         </div>
     )
-}
+})
 
 export default UserCard

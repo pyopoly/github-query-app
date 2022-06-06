@@ -2,25 +2,35 @@ import styles from '../../styles/Home.module.css'
 import Header from '../../components/Header/Header'
 import ListView from '../../components/ListView/ListView'
 import SearchBar from '../../components/SearchBar/SearchBar'
+import Loading from '../../components/Loading/Loading'
 import { useRouter } from "next/router"
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import useQueries from '../../Hooks/useQueries'
 import Image from 'next/image'
 
 
-export default function Search({ q, type, cursor, limit = 5 }) {
+export default function Search({ q, type, cursor, limit = 10 }) {
     const router = useRouter();
     const [loadMoreTrigger, setLoadMoreTrigger] = useState(1);
     const cursorRef = useRef(cursor);
     const { queries, isLoading, isError, hasMore } = useQueries(q, type, limit, cursorRef, loadMoreTrigger);
 
 
-    const submit = (q, type) => {
-        router.push(`/search?q=${q}&type=${type}`)
-    }
+    const observer = useRef();
+    const lastElementRef = useCallback(element => {
+        if (isLoading) return;
+        if (observer.current) observer.current.disconnect();
+        observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && hasMore) {
+                setLoadMoreTrigger(loadMoreTrigger + 1);
+            }
+        })
+        if (element) observer.current.observe(element)
+    }, [isLoading, hasMore])
 
-    const handleLoadMore = () => {
-        if (hasMore) setLoadMoreTrigger(loadMoreTrigger + 1);
+
+    const submit = (q, type) => {
+        router.push(`/search?q=${q}&type=${type}`);
     }
 
 
@@ -37,14 +47,11 @@ export default function Search({ q, type, cursor, limit = 5 }) {
                 <SearchBar placeholder="Search" onSubmit={submit} initValue={q} initType={type} />
                 <div className={styles.grid}>
                     {queries.length > 0 &&
-                        <ListView
-                            queries={queries}
-                            type={type}
-                            handleLoadMore={handleLoadMore}
-                        />}
+                        <ListView queries={queries} type={type} elementRef={lastElementRef} />}
                 </div>
-                {isLoading && <div> Is Loading </div>}
-                {isError && <div> Something Went Wrong </div>}
+                {isLoading && <Loading />}
+                {!hasMore && <div> No More to Show! </div>}
+                {isError && <div> Something Went Wrong! </div>}
             </main>
         </div>
     )
