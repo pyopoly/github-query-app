@@ -3,7 +3,7 @@ import listStyles from '../../../styles/ListView.module.css'
 import Image from 'next/image'
 import React from 'react'
 
-const RepoCard = React.forwardRef(({ result }, ref) => (
+const RepoCard = ({ result }, ref) => (
     <div className={styles.card}>
         <span className={listStyles.profile_header}>
             <h2 className={listStyles.profile_title}>{result.name}</h2>
@@ -14,6 +14,6 @@ const RepoCard = React.forwardRef(({ result }, ref) => (
         <div className={listStyles.description}>{result.description}</div>
         <div className='loadMore' ref={ref}></div>
     </div>
-));
+);
 
-export default RepoCard
+export default React.forwardRef(RepoCard)

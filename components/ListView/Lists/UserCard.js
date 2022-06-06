@@ -3,7 +3,7 @@ import listStyles from '../../../styles/ListView.module.css'
 import Image from 'next/image'
 import React from 'react'
 
-const UserCard = React.forwardRef(({ result }, ref) => {
+const UserCard = ({ result }, ref) => {
     return (
         <div className={`${styles.card} ${listStyles.profile_card}`}>
             <div className={listStyles.profile_img_container}>
@@ -21,6 +21,6 @@ const UserCard = React.forwardRef(({ result }, ref) => {
             <div className='loadMore' ref={ref}></div>
         </div>
     )
-})
+}
 
-export default UserCard
+export default React.forwardRef(UserCard)
