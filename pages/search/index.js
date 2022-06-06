@@ -3,27 +3,25 @@ import Header from '../../components/Header/Header'
 import ListView from '../../components/ListView/ListView'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import { useRouter } from "next/router"
-import { useEffect, useState, useRef } from 'react'
-import { githubQueries, TYPES } from '../api/queries/query'
+import { useState, useRef } from 'react'
+import useQueries from '../../Hooks/useQueries'
 import Image from 'next/image'
 
 
-export default function Search({ data, status,u }) {
+export default function Search({ q, type, cursor, limit = 5 }) {
     const router = useRouter();
-    const { q: query, type } = router.query;
-    const [queryResults, setQueryResults] = useState(data?.search?.nodes)
-    const endCursor = useRef(data?.search?.pageInfo.endCursor);
+    const [loadMoreTrigger, setLoadMoreTrigger] = useState(1);
+    const cursorRef = useRef(cursor);
+    const { queries, isLoading, isError, hasMore } = useQueries(q, type, limit, cursorRef, loadMoreTrigger);
 
-    const submit = (query, type) => {
-        router.push(`/search?q=${query}&type=${type}`)
+
+    const submit = (q, type) => {
+        router.push(`/search?q=${q}&type=${type}`)
     }
 
-
-    useEffect(() => {
-        if (status === "ok" && query && TYPES.includes(type)) {
-            setQueryResults([...data?.search?.nodes])
-        }
-    }, [query, type, data?.search?.nodes, status])
+    const handleLoadMore = () => {
+        if (hasMore) setLoadMoreTrigger(loadMoreTrigger + 1);
+    }
 
 
     return (
@@ -32,53 +30,26 @@ export default function Search({ data, status,u }) {
             <main className={styles.main}>
                 <h2 className={styles.title}>
                     Welcome to Github Query App
-                <a className={styles.logo} href="https://github.com/pyopoly/github-query-app" target="_blank" rel="noreferrer">
-                    <Image src="/github.svg" alt="GitHub Logo" width={35} height={35} />
-                </a>
+                    <a className={styles.logo} href="https://github.com/pyopoly/github-query-app" target="_blank" rel="noreferrer">
+                        <Image src="/github.svg" alt="GitHub Logo" width={35} height={35} />
+                    </a>
                 </h2>
-                <SearchBar placeholder="Search" onSubmit={submit} initValue={query} initType={type} />
+                <SearchBar placeholder="Search" onSubmit={submit} initValue={q} initType={type} />
                 <div className={styles.grid}>
-                    {queryResults && <ListView 
-                    results={queryResults}
-                    query={query}
-                    type={type} 
-                    endCursor={endCursor}
-                    setResults={setQueryResults} />}
+                    {queries.length > 0 &&
+                        <ListView
+                            queries={queries}
+                            type={type}
+                            handleLoadMore={handleLoadMore}
+                        />}
                 </div>
+                {isLoading && <div> Is Loading </div>}
+                {isError && <div> Something Went Wrong </div>}
             </main>
         </div>
     )
 }
 
-
-
 export async function getServerSideProps({ query }) {
-    if (!query.q || !query.type) return { props: { status: "no params" } };
-    
-    // const baseURL = "http://localhost:3000/"
-    // const response = await fetchGithub({ query: query.q, type:query.type, domain:`${process.env.VERCEL_URL}/` });
-
-    const token = process.env.SECRET_KEY;
-    const graphQLquery = githubQueries({
-        query: query.q,
-        type: query.type
-    });
-
-
-    const response = await fetch(`https://api.github.com/graphql`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `token ${token}`
-        },
-        body: JSON.stringify(graphQLquery)
-    })
-        .then(res => res.json())
-        .then(data => {
-            if (!!data.errors) throw Error(data.errors[0].message);
-            return { ...data, status: "ok" };
-        })
-        .catch(error => ({ status: error.message }));
-
-    return { props: response };
+    return { props: query };
 }

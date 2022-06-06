@@ -4,7 +4,7 @@ import UserCard from './UserCard'
 const UserList = ({ results }) => {
     return (
         <div className={styles.container}>
-            {results.map(result => (result.login) && <UserCard key={result.login} result={result} />)}
+            {results.map(result => (result.login) && <UserCard key={result.id} result={result} />)}
         </div>
     )
 }

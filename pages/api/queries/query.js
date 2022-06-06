@@ -9,9 +9,11 @@ export const githubQueries = ({ query, type, cursor, limit=10 }) => {
         repositoryCount
         pageInfo {
           endCursor
+          hasNextPage
         }
         nodes {
           ...on Repository {
+            id
             name
             description
             nameWithOwner
@@ -30,9 +32,11 @@ export const githubQueries = ({ query, type, cursor, limit=10 }) => {
         userCount
         pageInfo {
           endCursor
+          hasNextPage
         }
         nodes {
           ...on User {
+            id
             url
             login
             name
@@ -46,18 +50,4 @@ export const githubQueries = ({ query, type, cursor, limit=10 }) => {
   }
 
   return (type === "REPOSITORY") ? queryRepo : queryUser
-}
-
-
-export const fetchGithub = async ({ query, type, cursor, limit=10, domain="" }) => {
-  const url = `${domain}api/search-github?q=${query}&type=${type}&limit=${limit}${cursor? `&cursor=${cursor}`: ""}`;
-  const response = await fetch(url)
-      .then(res => {
-        if (res.status !== 200) throw Error(res.statusText);
-        return res.json()
-      })
-      .catch(error => {
-        console.log("error", error)
-        return ({ status: error.message })});
-      return { result: response };
 }

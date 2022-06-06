@@ -4,7 +4,7 @@ import RepoCard from "./RepoCard"
 const RepoList = ({ results }) => {
   return (
     <div className={styles.container}>
-      {results.map(result => (result?.owner?.login) && <RepoCard key={result.owner.login} result={result} /> )}
+      {results.map(result => (result?.owner?.login) && <RepoCard key={result.id} result={result} /> )}
     </div>
   )
 }

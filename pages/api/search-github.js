@@ -26,7 +26,7 @@ export default async function handler(req, res) {
         .then(res => res.json())
         .then(data => {
             if (!!data.errors) throw Error(data.errors[0].message);
-            res.status(200).json({ ...data, status: "ok" });
+            res.status(200).json({ ...data.data.search, status: "ok" });
         })
         .catch(error => {
             console.log("error", error.message)
