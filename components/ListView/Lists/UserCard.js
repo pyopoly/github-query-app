@@ -1,9 +1,9 @@
 import styles from '../../../styles/Home.module.css'
 import listStyles from '../../../styles/ListView.module.css'
 import Image from 'next/image'
-import { forwardRef } from 'react'
+import React from 'react'
 
-const UserCard = forwardRef(({ result }, ref) => {
+const UserCard = React.forwardRef(({ result }, ref) => {
     return (
         <div className={`${styles.card} ${listStyles.profile_card}`}>
             <div className={listStyles.profile_img_container}>

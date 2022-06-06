@@ -1,9 +1,9 @@
 import styles from '../../../styles/Home.module.css'
 import listStyles from '../../../styles/ListView.module.css'
 import Image from 'next/image'
-import { forwardRef } from 'react'
+import React from 'react'
 
-const RepoCard = forwardRef(({ result }, ref) => (
+const RepoCard = React.forwardRef(({ result }, ref) => (
     <div className={styles.card}>
         <span className={listStyles.profile_header}>
             <h2 className={listStyles.profile_title}>{result.name}</h2>
