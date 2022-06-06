@@ -4,9 +4,11 @@ import UserList from './Lists/UserList';
 
 const ListView = ({ queries, type, elementRef }) => {
   return (
-    <div className={styles.container}>
-      {(type === "REPOSITORY") && <RepoList elementRef={elementRef} results={queries} />}
-      {(type === "USER") && <UserList elementRef={elementRef} results={queries} />}
+    <div className={styles.grid}>
+      <div className={styles.container}>
+        {(type === "REPOSITORY") && <RepoList elementRef={elementRef} results={queries} />}
+        {(type === "USER") && <UserList elementRef={elementRef} results={queries} />}
+      </div>
     </div>
   )
 }
